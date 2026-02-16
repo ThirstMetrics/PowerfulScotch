@@ -7,7 +7,7 @@
 
 defined('ABSPATH') || exit;
 
-define('PS_VERSION', '1.0.0');
+define('PS_VERSION', '1.0.1');
 define('PS_DIR', get_template_directory());
 define('PS_URI', get_template_directory_uri());
 

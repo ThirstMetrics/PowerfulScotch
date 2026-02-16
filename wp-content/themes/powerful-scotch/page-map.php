@@ -48,15 +48,8 @@ get_header(); ?>
         </div>
     </div>
 
-    <!-- Coming soon overlay -->
-    <div class="map-coming-soon" id="map-coming-soon" hidden>
-        <div class="coming-soon-content">
-            <div class="coming-soon-icon">&#127758;</div>
-            <h2>Coming Soon</h2>
-            <p>We're tracking down distilleries for this spirit category. Check back soon!</p>
-            <a href="<?php echo esc_url(home_url('/map/?spirit=scotch')); ?>" class="btn btn-primary">View Scotch Map</a>
-        </div>
-    </div>
+    <!-- Coming soon overlay (injected by JS when needed) -->
+    <div class="map-coming-soon" id="map-coming-soon"></div>
 </div>
 
 <?php get_footer();

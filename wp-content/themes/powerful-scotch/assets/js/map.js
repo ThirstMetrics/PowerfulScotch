@@ -315,10 +315,18 @@
      * Coming Soon
      */
     function showComingSoon() {
-        if (comingSoon) comingSoon.hidden = false;
+        if (!comingSoon) return;
+        comingSoon.innerHTML =
+            '<div class="coming-soon-content">' +
+                '<div class="coming-soon-icon">&#127758;</div>' +
+                '<h2>Coming Soon</h2>' +
+                '<p>We\'re tracking down distilleries for this spirit category. Check back soon!</p>' +
+                '<a href="' + psMapData.siteUrl + '/map/?spirit=scotch" class="btn btn-primary">View Scotch Map</a>' +
+            '</div>';
+        comingSoon.classList.add('visible');
     }
     function hideComingSoon() {
-        if (comingSoon) comingSoon.hidden = true;
+        if (comingSoon) comingSoon.classList.remove('visible');
     }
 
     /**
