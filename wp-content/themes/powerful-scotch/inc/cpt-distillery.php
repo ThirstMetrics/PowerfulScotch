@@ -2,7 +2,7 @@
 /**
  * Custom Post Type: Distillery
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 defined('ABSPATH') || exit;

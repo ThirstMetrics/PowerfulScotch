@@ -1,5 +1,12 @@
 /* ============================================================
-   Powerful Scotch — Design System & Theme Styles
+   Powerful Spirits — Design System & Theme Styles
+   ============================================================
+   Brand Guide:
+     Primary teal:   #1b3a4b  (PowerfulThirst brand)
+     Dark theme bg:  #0f0f1a
+     Accent gold:    #d4a574
+     Typography:     Inter / system sans-serif
+     Spacing:        8px base unit
    ============================================================ */
 
 /* --- Custom Properties --- */
@@ -156,8 +163,16 @@ img {
 }
 
 .site-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     text-decoration: none;
     flex-shrink: 0;
+}
+
+.site-logo__img {
+    height: 36px;
+    width: auto;
 }
 
 .logo-text {

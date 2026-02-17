@@ -2,13 +2,13 @@
 /**
  * Custom REST API Endpoint for Distillery GeoJSON
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 defined('ABSPATH') || exit;
 
 function ps_register_rest_routes() {
-    register_rest_route('powerful-scotch/v1', '/distilleries', [
+    register_rest_route('powerful-spirits/v1', '/distilleries', [
         'methods'             => 'GET',
         'callback'            => 'ps_get_distilleries_geojson',
         'permission_callback' => '__return_true',
@@ -105,6 +105,11 @@ function ps_get_distilleries_geojson(WP_REST_Request $request) {
             $year_closed = get_post_meta($post_id, 'year_closed', true);
             $website = get_post_meta($post_id, 'official_website', true);
             $owner   = get_post_meta($post_id, 'owner', true);
+            $still_types    = get_post_meta($post_id, 'still_types', true);
+            $expressions    = get_post_meta($post_id, 'expressions', true);
+            $barrel_sources = get_post_meta($post_id, 'barrel_sources', true);
+            $raw_material   = get_post_meta($post_id, 'raw_material', true);
+            $country        = get_post_meta($post_id, 'country', true);
 
             $year_display = $year;
             if ($year_closed) {
@@ -125,12 +130,17 @@ function ps_get_distilleries_geojson(WP_REST_Request $request) {
                     'slug'             => get_post_field('post_name', $post_id),
                     'region'           => $region_name,
                     'spirit_type'      => $spirit_name,
-                    'type'             => $type ?: 'Malt',
+                    'type'             => $type ?: '',
                     'status'           => $status ?: 'Operating',
                     'year'             => $year_display,
                     'url'              => get_permalink($post_id),
                     'official_website' => $website,
                     'owner'            => $owner,
+                    'still_types'      => $still_types,
+                    'expressions'      => $expressions,
+                    'barrel_sources'   => $barrel_sources,
+                    'raw_material'     => $raw_material,
+                    'country'          => $country,
                 ],
             ];
         }

@@ -8,7 +8,7 @@
  * Or add ?ps_import=1&ps_import_key=YOUR_SECRET to any admin page URL
  * (requires is_admin() and a secret key for safety).
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 defined('ABSPATH') || exit;

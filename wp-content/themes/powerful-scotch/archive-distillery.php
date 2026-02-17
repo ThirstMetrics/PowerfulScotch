@@ -2,7 +2,7 @@
 /**
  * Archive: Distillery Listing
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 get_header(); ?>

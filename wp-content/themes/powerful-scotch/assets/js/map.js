@@ -1,5 +1,5 @@
 /**
- * Powerful Scotch — Main Map Controller
+ * Powerful Spirits — Main Map Controller
  *
  * Leaflet.js map with clustering, minimap, tooltips, filtering,
  * search, deep-linking, and mobile support.
@@ -11,11 +11,11 @@
     var SPIRIT_VIEWS = {
         scotch:  { center: [56.8, -4.5],    zoom: 7  },
         tequila: { center: [20.7, -103.3],  zoom: 7  },
-        rum:     { center: [18.0, -66.0],   zoom: 5  },
+        rum:     { center: [15.0, -40.0],   zoom: 3  },
         sake:    { center: [36.2, 138.2],   zoom: 6  },
     };
 
-    var AVAILABLE_SPIRITS = ['scotch']; // Spirits with actual data
+    var AVAILABLE_SPIRITS = ['scotch', 'rum']; // Spirits with actual data
 
     // State
     var map, clusterGroup, miniMap, allFeatures = [], filteredFeatures = [];
@@ -155,6 +155,16 @@
             renderMarkers(allFeatures);
             buildRegionFilters(allFeatures);
             updateCount(allFeatures.length);
+
+            // Auto-fit bounds for non-scotch spirits (global coverage)
+            if (spirit !== 'scotch' && allFeatures.length > 0) {
+                var bounds = [];
+                allFeatures.forEach(function (f) {
+                    bounds.push([f.geometry.coordinates[1], f.geometry.coordinates[0]]);
+                });
+                map.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
+            }
+
             checkDeepLink();
         })
         .catch(function (err) {
@@ -195,24 +205,40 @@
             }
 
             // Tooltip (hover)
+            var locationParts = [];
+            if (p.country) locationParts.push(escHtml(p.country));
+            if (p.region) locationParts.push(escHtml(p.region));
+            var locationStr = locationParts.join(', ');
+
+            var spiritLabel = getSpiritLabel(p);
+
             var tooltipHtml = '<div class="popup-name">' + escHtml(p.name) + '</div>' +
                 '<div class="popup-meta">' +
                     '<span class="status-badge status-badge--' + escHtml(p.status.toLowerCase()) + ' status-badge--sm">' + escHtml(p.status) + '</span>' +
-                    (p.region ? '<span class="meta-tag meta-tag--sm">' + escHtml(p.region) + '</span>' : '') +
+                    (locationStr ? '<span class="meta-tag meta-tag--sm">' + locationStr + '</span>' : '') +
+                    (spiritLabel ? '<span class="meta-tag meta-tag--sm">' + escHtml(spiritLabel) + '</span>' : '') +
                 '</div>' +
                 '<div class="popup-facts">' +
-                    '<div>' + escHtml(p.type) + (p.year ? ' &middot; ' + escHtml(p.year) : '') + '</div>' +
-                '</div>';
+                    (p.type ? '<div>' + escHtml(p.type) + (p.year ? ' &middot; ' + escHtml(p.year) : '') + '</div>' : (p.year ? '<div>' + escHtml(p.year) + '</div>' : '')) +
+                    (p.raw_material ? '<div>Raw material: ' + escHtml(p.raw_material) + '</div>' : '') +
+                '</div>' +
+                (p.official_website ? '<a class="popup-link" href="' + escHtml(p.official_website) + '" target="_blank" rel="noopener noreferrer">Visit &rarr;</a>' : '');
 
-            marker.bindTooltip(tooltipHtml, {
-                className: 'ps-tooltip',
-                direction: 'top',
+            // Hover popup (stays open so user can click Visit link)
+            marker.bindPopup(tooltipHtml, {
+                className: 'ps-popup',
+                closeButton: false,
                 offset: [0, -8],
-                opacity: 1,
+                autoPan: false,
             });
 
-            // Click handler
+            marker.on('mouseover', function () {
+                this.openPopup();
+            });
+
+            // Click handler — close popup, open sidebar
             marker.on('click', function () {
+                this.closePopup();
                 onMarkerClick(p, lat, lng);
             });
 
@@ -246,21 +272,30 @@
      * Build detail panel HTML
      */
     function buildDetailPanel(p) {
+        var spiritLabel = getSpiritLabel(p);
         var html = '<h3 class="sidebar-distillery-name">' + escHtml(p.name) + '</h3>';
         html += '<div class="sidebar-meta">';
         html += '<span class="status-badge status-badge--' + escHtml(p.status.toLowerCase()) + '">' + escHtml(p.status) + '</span>';
+        if (p.country) html += '<span class="meta-tag">' + escHtml(p.country) + '</span>';
         if (p.region) html += '<span class="meta-tag">' + escHtml(p.region) + '</span>';
-        html += '<span class="meta-tag">' + escHtml(p.type) + '</span>';
+        if (spiritLabel) html += '<span class="meta-tag">' + escHtml(spiritLabel) + '</span>';
+        if (p.type) html += '<span class="meta-tag">' + escHtml(p.type) + '</span>';
         html += '</div>';
 
         html += '<div class="sidebar-facts">';
+        if (p.country) html += buildFact('Country', p.country);
         if (p.year) html += buildFact('Years Active', p.year);
         if (p.region) html += buildFact('Region', p.region);
-        html += buildFact('Type', p.type);
+        if (p.type) html += buildFact('Type', p.type);
         html += buildFact('Status', p.status);
         if (p.owner) html += buildFact('Owner', p.owner);
+        if (p.raw_material) html += buildFact('Raw Material', p.raw_material);
+        if (p.still_types) html += buildFact('Still Types', p.still_types);
+        if (p.barrel_sources) html += buildFact('Barrel Sources', p.barrel_sources);
+        if (p.expressions) html += buildFact('Expressions', p.expressions);
         if (p.official_website) {
-            html += '<div class="sidebar-fact"><span class="sidebar-fact__label">Website</span><span class="sidebar-fact__value"><a href="' + escHtml(p.official_website) + '" target="_blank" rel="noopener noreferrer">Visit</a></span></div>';
+            var displayUrl = p.official_website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+            html += '<div class="sidebar-fact"><span class="sidebar-fact__label">Website</span><span class="sidebar-fact__value"><a href="' + escHtml(p.official_website) + '" target="_blank" rel="noopener noreferrer">' + escHtml(displayUrl) + '</a></span></div>';
         }
         html += '</div>';
 
@@ -453,7 +488,7 @@
         // Zoom to marker, spiderfy if in cluster
         clusterGroup.zoomToShowLayer(entry.marker, function () {
             map.setView([lat, lng], Math.max(map.getZoom(), 12), { animate: true });
-            entry.marker.openTooltip();
+            entry.marker.openPopup();
             onMarkerClick(p, lat, lng);
         });
     }
@@ -517,6 +552,20 @@
             iconSize: [16, 16],
             iconAnchor: [8, 8],
         });
+    }
+
+    /**
+     * French-tradition rum countries → "Rhum", all others → "Rum"
+     */
+    var RHUM_COUNTRIES = [
+        'Martinique', 'Guadeloupe', 'Haiti', 'Réunion', 'Reunion', 'Madagascar',
+    ];
+
+    function getSpiritLabel(p) {
+        var st = (p.spirit_type || '').toLowerCase();
+        if (st !== 'rum') return p.spirit_type || '';
+        if (p.country && RHUM_COUNTRIES.indexOf(p.country) !== -1) return 'Rhum';
+        return 'Rum';
     }
 
     /**

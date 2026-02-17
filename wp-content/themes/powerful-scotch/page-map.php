@@ -4,7 +4,7 @@
  *
  * Full-screen interactive map page
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 get_header(); ?>

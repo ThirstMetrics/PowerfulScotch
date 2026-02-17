@@ -2,7 +2,7 @@
 /**
  * 404 Page
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 get_header(); ?>

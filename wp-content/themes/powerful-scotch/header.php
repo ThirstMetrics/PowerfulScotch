@@ -4,6 +4,10 @@
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?php bloginfo('description'); ?>">
+    <link rel="icon" type="image/x-icon" href="<?php echo esc_url(PS_URI . '/assets/img/favicon.ico'); ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo esc_url(PS_URI . '/assets/img/favicon-32.png'); ?>">
+    <link rel="icon" type="image/png" sizes="192x192" href="<?php echo esc_url(PS_URI . '/assets/img/favicon-192.png'); ?>">
+    <link rel="apple-touch-icon" href="<?php echo esc_url(PS_URI . '/assets/img/favicon-192.png'); ?>">
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -12,7 +16,8 @@
 <header class="site-header" id="site-header">
     <div class="header-inner">
         <a href="<?php echo esc_url(home_url('/')); ?>" class="site-logo">
-            <span class="logo-text">Powerful<span class="logo-accent">Scotch</span></span>
+            <img src="<?php echo esc_url(PS_URI . '/assets/img/powerfulthirst-logo.png'); ?>" alt="PowerfulThirst Atlas" class="site-logo__img">
+            <span class="logo-text">Powerful<span class="logo-accent">Spirits</span></span>
         </a>
 
         <nav class="spirit-nav" id="spirit-nav" aria-label="Spirit categories">

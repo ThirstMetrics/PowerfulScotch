@@ -2,7 +2,7 @@
 /**
  * Template Part: Map Region Filter Chips
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 $spirit = isset($_GET['spirit']) ? sanitize_key($_GET['spirit']) : 'scotch';

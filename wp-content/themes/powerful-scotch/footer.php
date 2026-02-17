@@ -3,7 +3,8 @@
 <footer class="site-footer">
     <div class="footer-inner">
         <div class="footer-brand">
-            <span class="logo-text">Powerful<span class="logo-accent">Scotch</span></span>
+            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/img/powerfulthirst-logo.png'); ?>" alt="PowerfulThirst Atlas" class="site-logo__img">
+            <span class="logo-text">Powerful<span class="logo-accent">Spirits</span></span>
             <p class="footer-tagline">Mapping the world's finest distilleries</p>
         </div>
         <div class="footer-links">

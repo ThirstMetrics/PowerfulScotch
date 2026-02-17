@@ -1,5 +1,5 @@
 /**
- * Powerful Scotch — Spirit Switcher & Mobile Menu
+ * Powerful Spirits — Spirit Switcher & Mobile Menu
  *
  * Handles spirit tab navigation and mobile menu toggle.
  */

@@ -2,7 +2,7 @@
 /**
  * Taxonomies: Spirit Type & Region
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 defined('ABSPATH') || exit;
@@ -72,6 +72,17 @@ function ps_create_default_terms() {
         'Eastern Highlands', 'Lowlands', 'Campbeltown', 'Islands', 'Midlands',
     ];
     foreach ($scotch_regions as $region) {
+        if (!term_exists($region, 'region')) {
+            wp_insert_term($region, 'region');
+        }
+    }
+
+    // Rum geographic regions
+    $rum_regions = [
+        'Caribbean', 'Central America', 'South America', 'North America',
+        'Europe', 'Africa', 'Asia-Pacific',
+    ];
+    foreach ($rum_regions as $region) {
         if (!term_exists($region, 'region')) {
             wp_insert_term($region, 'region');
         }

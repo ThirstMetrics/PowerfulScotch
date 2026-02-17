@@ -5,7 +5,7 @@
  * If ACF is active, registers field groups programmatically.
  * If ACF is not installed, falls back to native meta boxes.
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 defined('ABSPATH') || exit;
@@ -102,6 +102,41 @@ function ps_register_acf_fields() {
                 'name'         => 'still_count',
                 'type'         => 'number',
             ],
+            [
+                'key'          => 'field_still_types',
+                'label'        => 'Still Types',
+                'name'         => 'still_types',
+                'type'         => 'text',
+                'instructions' => 'e.g., Column stills, Pot stills',
+            ],
+            [
+                'key'          => 'field_expressions',
+                'label'        => 'Expressions',
+                'name'         => 'expressions',
+                'type'         => 'textarea',
+                'instructions' => 'Notable expressions / brands produced',
+                'rows'         => 3,
+            ],
+            [
+                'key'          => 'field_barrel_sources',
+                'label'        => 'Barrel Sources',
+                'name'         => 'barrel_sources',
+                'type'         => 'text',
+                'instructions' => 'e.g., Oak, Ex-bourbon',
+            ],
+            [
+                'key'          => 'field_raw_material',
+                'label'        => 'Raw Material',
+                'name'         => 'raw_material',
+                'type'         => 'text',
+                'instructions' => 'e.g., Molasses, Sugarcane juice',
+            ],
+            [
+                'key'          => 'field_country',
+                'label'        => 'Country',
+                'name'         => 'country',
+                'type'         => 'text',
+            ],
         ],
         'location' => [
             [
@@ -153,6 +188,11 @@ function ps_render_distillery_meta_box($post) {
         'owner'              => ['label' => 'Owner', 'type' => 'text'],
         'water_source'       => ['label' => 'Water Source', 'type' => 'text'],
         'still_count'        => ['label' => 'Number of Stills', 'type' => 'number'],
+        'still_types'        => ['label' => 'Still Types', 'type' => 'text'],
+        'expressions'        => ['label' => 'Expressions', 'type' => 'text'],
+        'barrel_sources'     => ['label' => 'Barrel Sources', 'type' => 'text'],
+        'raw_material'       => ['label' => 'Raw Material', 'type' => 'text'],
+        'country'            => ['label' => 'Country', 'type' => 'text'],
     ];
 
     echo '<table class="form-table"><tbody>';
@@ -193,7 +233,8 @@ function ps_save_distillery_meta($post_id) {
     $fields = [
         'latitude', 'longitude', 'distillery_status', 'distillery_type',
         'year_founded', 'year_closed', 'official_website', 'owner',
-        'water_source', 'still_count',
+        'water_source', 'still_count', 'still_types', 'expressions',
+        'barrel_sources', 'raw_material', 'country',
     ];
 
     foreach ($fields as $field) {

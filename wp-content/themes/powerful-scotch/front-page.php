@@ -2,7 +2,7 @@
 /**
  * Homepage: Hero + Featured Map
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 get_header(); ?>
@@ -22,15 +22,31 @@ get_header(); ?>
     <div class="content-wrap">
         <h2 class="section-title">Choose Your Spirit</h2>
         <div class="cards-grid">
+            <?php
+            // Count scotch distilleries only
+            $scotch_query = new WP_Query([
+                'post_type'      => 'distillery',
+                'posts_per_page' => 1,
+                'post_status'    => 'publish',
+                'tax_query'      => [['taxonomy' => 'spirit_type', 'field' => 'slug', 'terms' => 'scotch']],
+            ]);
+            $scotch_count = $scotch_query->found_posts;
+            wp_reset_postdata();
+
+            // Count rum distilleries
+            $rum_query = new WP_Query([
+                'post_type'      => 'distillery',
+                'posts_per_page' => 1,
+                'post_status'    => 'publish',
+                'tax_query'      => [['taxonomy' => 'spirit_type', 'field' => 'slug', 'terms' => 'rum']],
+            ]);
+            $rum_count = $rum_query->found_posts;
+            wp_reset_postdata();
+            ?>
             <a href="<?php echo esc_url(home_url('/map/?spirit=scotch')); ?>" class="spirit-card spirit-card--scotch">
                 <div class="spirit-card__icon">&#127867;</div>
                 <h3 class="spirit-card__title">Scotch Whisky</h3>
-                <p class="spirit-card__count">
-                    <?php
-                    $count = wp_count_posts('distillery');
-                    echo esc_html($count->publish ?: '135');
-                    ?> Distilleries
-                </p>
+                <p class="spirit-card__count"><?php echo esc_html($scotch_count ?: '135'); ?> Distilleries</p>
                 <p class="spirit-card__desc">From Speyside to Islay, explore every malt and grain distillery in Scotland.</p>
                 <span class="spirit-card__cta">Explore Map &rarr;</span>
             </a>
@@ -42,12 +58,13 @@ get_header(); ?>
                 <span class="spirit-card__badge">Coming Soon</span>
             </div>
 
-            <div class="spirit-card spirit-card--rum spirit-card--soon">
+            <a href="<?php echo esc_url(home_url('/map/?spirit=rum')); ?>" class="spirit-card spirit-card--rum">
                 <div class="spirit-card__icon">&#127860;</div>
                 <h3 class="spirit-card__title">Rum</h3>
+                <p class="spirit-card__count"><?php echo esc_html($rum_count ?: '173'); ?> Distilleries</p>
                 <p class="spirit-card__desc">Caribbean and global rum distilleries.</p>
-                <span class="spirit-card__badge">Coming Soon</span>
-            </div>
+                <span class="spirit-card__cta">Explore Map &rarr;</span>
+            </a>
 
             <div class="spirit-card spirit-card--sake spirit-card--soon">
                 <div class="spirit-card__icon">&#127862;</div>
@@ -89,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }).addTo(map);
 
     // Fetch and show markers
-    fetch('<?php echo esc_url(rest_url('powerful-scotch/v1/distilleries?spirit_type=scotch')); ?>')
+    fetch('<?php echo esc_url(rest_url('powerful-spirits/v1/distilleries?spirit_type=scotch')); ?>')
         .then(function(r) { return r.json(); })
         .then(function(geojson) {
             if (!geojson.features) return;

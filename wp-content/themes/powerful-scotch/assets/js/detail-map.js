@@ -1,5 +1,5 @@
 /**
- * Powerful Scotch — Detail Page Map
+ * Powerful Spirits — Detail Page Map
  *
  * Small Leaflet map on the single distillery detail page.
  */

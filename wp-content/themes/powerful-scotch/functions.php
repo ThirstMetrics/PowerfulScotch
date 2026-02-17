@@ -1,13 +1,13 @@
 <?php
 /**
- * Powerful Scotch Theme Functions
+ * Powerful Spirits Theme Functions
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 defined('ABSPATH') || exit;
 
-define('PS_VERSION', '1.0.1');
+define('PS_VERSION', '1.1.0');
 define('PS_DIR', get_template_directory());
 define('PS_URI', get_template_directory_uri());
 
@@ -28,7 +28,7 @@ function ps_setup() {
     ]);
 
     register_nav_menus([
-        'primary' => __('Primary Navigation', 'powerful-scotch'),
+        'primary' => __('Primary Navigation', 'powerful-spirits'),
     ]);
 }
 add_action('after_setup_theme', 'ps_setup');
@@ -69,7 +69,7 @@ function ps_enqueue_assets() {
 
     // Theme styles
     wp_enqueue_style(
-        'powerful-scotch-main',
+        'powerful-spirits-main',
         PS_URI . '/assets/css/main.css',
         ['leaflet', 'leaflet-markercluster', 'leaflet-minimap'],
         PS_VERSION
@@ -127,7 +127,7 @@ function ps_enqueue_map_assets() {
         );
 
         wp_localize_script('ps-map', 'psMapData', [
-            'restUrl'    => rest_url('powerful-scotch/v1/distilleries'),
+            'restUrl'    => rest_url('powerful-spirits/v1/distilleries'),
             'nonce'      => wp_create_nonce('wp_rest'),
             'themeUrl'   => PS_URI,
             'siteUrl'    => home_url(),

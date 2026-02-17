@@ -2,7 +2,7 @@
 /**
  * Fallback template
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 get_header(); ?>

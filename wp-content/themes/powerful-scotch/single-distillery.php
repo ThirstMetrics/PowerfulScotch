@@ -2,7 +2,7 @@
 /**
  * Single Distillery Detail Page
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 get_header();
@@ -12,18 +12,23 @@ if (have_posts()) : the_post();
     $lat      = get_post_meta($post_id, 'latitude', true);
     $lng      = get_post_meta($post_id, 'longitude', true);
     $status   = get_post_meta($post_id, 'distillery_status', true) ?: 'Operating';
-    $type     = get_post_meta($post_id, 'distillery_type', true) ?: 'Malt';
+    $type     = get_post_meta($post_id, 'distillery_type', true);
     $year     = get_post_meta($post_id, 'year_founded', true);
     $year_closed = get_post_meta($post_id, 'year_closed', true);
     $website  = get_post_meta($post_id, 'official_website', true);
     $owner    = get_post_meta($post_id, 'owner', true);
     $water    = get_post_meta($post_id, 'water_source', true);
     $stills   = get_post_meta($post_id, 'still_count', true);
+    $still_types    = get_post_meta($post_id, 'still_types', true);
+    $expressions    = get_post_meta($post_id, 'expressions', true);
+    $barrel_sources = get_post_meta($post_id, 'barrel_sources', true);
+    $raw_material   = get_post_meta($post_id, 'raw_material', true);
+    $country        = get_post_meta($post_id, 'country', true);
 
     $regions      = wp_get_post_terms($post_id, 'region', ['fields' => 'names']);
     $region_name  = !empty($regions) ? $regions[0] : '';
     $spirit_types = wp_get_post_terms($post_id, 'spirit_type', ['fields' => 'names']);
-    $spirit_name  = !empty($spirit_types) ? $spirit_types[0] : 'Scotch';
+    $spirit_name  = !empty($spirit_types) ? $spirit_types[0] : '';
     $spirit_slug  = !empty($spirit_types) ? sanitize_title($spirit_types[0]) : 'scotch';
 
     $year_display = $year;
@@ -40,7 +45,9 @@ if (have_posts()) : the_post();
     <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="<?php echo esc_url(home_url('/')); ?>">Home</a>
         <span class="breadcrumb-sep">/</span>
+        <?php if ($spirit_name) : ?>
         <a href="<?php echo esc_url(home_url('/map/?spirit=' . $spirit_slug)); ?>"><?php echo esc_html($spirit_name); ?></a>
+        <?php endif; ?>
         <?php if ($region_name) : ?>
             <span class="breadcrumb-sep">/</span>
             <span><?php echo esc_html($region_name); ?></span>
@@ -57,7 +64,7 @@ if (have_posts()) : the_post();
                 <?php if ($region_name) : ?>
                     <span class="meta-tag"><?php echo esc_html($region_name); ?></span>
                 <?php endif; ?>
-                <span class="meta-tag"><?php echo esc_html($type); ?></span>
+                <?php if ($type) : ?><span class="meta-tag"><?php echo esc_html($type); ?></span><?php endif; ?>
             </div>
         </div>
     </div>
@@ -78,14 +85,24 @@ if (have_posts()) : the_post();
                     <td><?php echo $year_display; ?></td>
                 </tr>
                 <?php endif; ?>
+                <?php if ($region_name) : ?>
                 <tr>
                     <th>Region</th>
-                    <td><?php echo esc_html($region_name ?: 'Scotland'); ?></td>
+                    <td><?php echo esc_html($region_name); ?></td>
                 </tr>
+                <?php endif; ?>
+                <?php if ($country) : ?>
+                <tr>
+                    <th>Country</th>
+                    <td><?php echo esc_html($country); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($type) : ?>
                 <tr>
                     <th>Type</th>
                     <td><?php echo esc_html($type); ?></td>
                 </tr>
+                <?php endif; ?>
                 <tr>
                     <th>Status</th>
                     <td><span class="status-dot status-dot--<?php echo $status_class; ?>"></span> <?php echo esc_html($status); ?></td>
@@ -106,6 +123,30 @@ if (have_posts()) : the_post();
                 <tr>
                     <th>Stills</th>
                     <td><?php echo esc_html($stills); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($still_types) : ?>
+                <tr>
+                    <th>Still Types</th>
+                    <td><?php echo esc_html($still_types); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($raw_material) : ?>
+                <tr>
+                    <th>Raw Material</th>
+                    <td><?php echo esc_html($raw_material); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($barrel_sources) : ?>
+                <tr>
+                    <th>Barrel Sources</th>
+                    <td><?php echo esc_html($barrel_sources); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($expressions) : ?>
+                <tr>
+                    <th>Expressions</th>
+                    <td><?php echo esc_html($expressions); ?></td>
                 </tr>
                 <?php endif; ?>
                 <?php if ($website) : ?>

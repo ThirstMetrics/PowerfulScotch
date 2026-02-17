@@ -2,7 +2,7 @@
 /**
  * Template Part: Distillery Card
  *
- * @package PowerfulScotch
+ * @package PowerfulSpirits
  */
 
 $post_id = get_the_ID();
