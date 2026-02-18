@@ -15,7 +15,7 @@
         sake:    { center: [36.2, 138.2],   zoom: 6  },
     };
 
-    var AVAILABLE_SPIRITS = ['scotch', 'rum', 'tequila']; // Spirits with actual data
+    var AVAILABLE_SPIRITS = ['scotch', 'rum', 'tequila', 'sake']; // Spirits with actual data
 
     // State
     var map, clusterGroup, miniMap, allFeatures = [], filteredFeatures = [];
@@ -285,7 +285,9 @@
 
         html += '<div class="sidebar-facts">';
         if (p.nom_number) html += buildFact('NOM', p.nom_number);
+        if (p.name_japanese) html += buildFact('Japanese Name', p.name_japanese);
         if (p.country) html += buildFact('Country', p.country);
+        if (p.prefecture) html += buildFact('Prefecture', p.prefecture);
         if (p.year) html += buildFact('Years Active', p.year);
         if (p.region) html += buildFact('Region', p.region);
         if (p.type) html += buildFact('Type', p.type);
@@ -293,9 +295,13 @@
         if (p.owner) html += buildFact('Owner', p.owner);
         if (p.cooking_method) html += buildFact('Cooking Method', p.cooking_method);
         if (p.raw_material) html += buildFact('Raw Material', p.raw_material);
+        if (p.rice_varieties) html += buildFact('Rice Varieties', p.rice_varieties);
+        if (p.toji_school) html += buildFact('Toji School', p.toji_school);
         if (p.still_types) html += buildFact('Still Types', p.still_types);
         if (p.barrel_sources) html += buildFact('Barrel Sources', p.barrel_sources);
         if (p.production_capacity) html += buildFact('Production Capacity', p.production_capacity);
+        if (p.production_size) html += buildFact('Production Size', p.production_size);
+        if (p.key_brands) html += buildFact('Key Brands', p.key_brands);
         if (p.expressions) html += buildFact('Expressions', p.expressions);
         if (p.official_website) {
             var displayUrl = p.official_website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');

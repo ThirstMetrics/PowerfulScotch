@@ -489,6 +489,8 @@ a.spirit-card:hover {
     flex-shrink: 0;
     min-height: 48px;
     flex-wrap: wrap;
+    position: relative;
+    z-index: 500;
 }
 
 .map-toolbar__left,

@@ -27,6 +27,12 @@ if (have_posts()) : the_post();
     $nom_number          = get_post_meta($post_id, 'nom_number', true);
     $cooking_method      = get_post_meta($post_id, 'cooking_method', true);
     $production_capacity = get_post_meta($post_id, 'production_capacity', true);
+    $name_japanese       = get_post_meta($post_id, 'name_japanese', true);
+    $prefecture          = get_post_meta($post_id, 'prefecture', true);
+    $key_brands          = get_post_meta($post_id, 'key_brands', true);
+    $rice_varieties      = get_post_meta($post_id, 'rice_varieties', true);
+    $toji_school         = get_post_meta($post_id, 'toji_school', true);
+    $production_size     = get_post_meta($post_id, 'production_size', true);
 
     $regions      = wp_get_post_terms($post_id, 'region', ['fields' => 'names']);
     $region_name  = !empty($regions) ? $regions[0] : '';
@@ -106,6 +112,18 @@ if (have_posts()) : the_post();
                     <td><?php echo esc_html($nom_number); ?></td>
                 </tr>
                 <?php endif; ?>
+                <?php if ($name_japanese) : ?>
+                <tr>
+                    <th>Japanese Name</th>
+                    <td><?php echo esc_html($name_japanese); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($prefecture) : ?>
+                <tr>
+                    <th>Prefecture</th>
+                    <td><?php echo esc_html($prefecture); ?></td>
+                </tr>
+                <?php endif; ?>
                 <?php if ($type) : ?>
                 <tr>
                     <th>Type</th>
@@ -162,6 +180,30 @@ if (have_posts()) : the_post();
                 <tr>
                     <th>Barrel Sources</th>
                     <td><?php echo esc_html($barrel_sources); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($rice_varieties) : ?>
+                <tr>
+                    <th>Rice Varieties</th>
+                    <td><?php echo esc_html($rice_varieties); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($toji_school) : ?>
+                <tr>
+                    <th>Toji School</th>
+                    <td><?php echo esc_html($toji_school); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($production_size) : ?>
+                <tr>
+                    <th>Production Size</th>
+                    <td><?php echo esc_html($production_size); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($key_brands) : ?>
+                <tr>
+                    <th>Key Brands</th>
+                    <td><?php echo esc_html($key_brands); ?></td>
                 </tr>
                 <?php endif; ?>
                 <?php if ($expressions) : ?>

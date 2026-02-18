@@ -113,6 +113,12 @@ function ps_get_distilleries_geojson(WP_REST_Request $request) {
             $nom_number          = get_post_meta($post_id, 'nom_number', true);
             $cooking_method      = get_post_meta($post_id, 'cooking_method', true);
             $production_capacity = get_post_meta($post_id, 'production_capacity', true);
+            $name_japanese       = get_post_meta($post_id, 'name_japanese', true);
+            $prefecture          = get_post_meta($post_id, 'prefecture', true);
+            $key_brands          = get_post_meta($post_id, 'key_brands', true);
+            $rice_varieties      = get_post_meta($post_id, 'rice_varieties', true);
+            $toji_school         = get_post_meta($post_id, 'toji_school', true);
+            $production_size     = get_post_meta($post_id, 'production_size', true);
 
             $year_display = $year;
             if ($year_closed) {
@@ -147,6 +153,12 @@ function ps_get_distilleries_geojson(WP_REST_Request $request) {
                     'nom_number'          => $nom_number,
                     'cooking_method'      => $cooking_method,
                     'production_capacity' => $production_capacity,
+                    'name_japanese'       => $name_japanese,
+                    'prefecture'          => $prefecture,
+                    'key_brands'          => $key_brands,
+                    'rice_varieties'      => $rice_varieties,
+                    'toji_school'         => $toji_school,
+                    'production_size'     => $production_size,
                 ],
             ];
         }

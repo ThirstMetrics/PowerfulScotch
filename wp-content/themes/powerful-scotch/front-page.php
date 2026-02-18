@@ -78,12 +78,24 @@ get_header(); ?>
                 <span class="spirit-card__cta">Explore Map &rarr;</span>
             </a>
 
-            <div class="spirit-card spirit-card--sake spirit-card--soon">
+            <?php
+            // Count sake distilleries
+            $sake_query = new WP_Query([
+                'post_type'      => 'distillery',
+                'posts_per_page' => 1,
+                'post_status'    => 'publish',
+                'tax_query'      => [['taxonomy' => 'spirit_type', 'field' => 'slug', 'terms' => 'sake']],
+            ]);
+            $sake_count = $sake_query->found_posts;
+            wp_reset_postdata();
+            ?>
+            <a href="<?php echo esc_url(home_url('/map/?spirit=sake')); ?>" class="spirit-card spirit-card--sake">
                 <div class="spirit-card__icon">&#127862;</div>
                 <h3 class="spirit-card__title">Sake</h3>
+                <p class="spirit-card__count"><?php echo esc_html($sake_count ?: '798'); ?> Distilleries</p>
                 <p class="spirit-card__desc">Japan's finest sake breweries and distilleries.</p>
-                <span class="spirit-card__badge">Coming Soon</span>
-            </div>
+                <span class="spirit-card__cta">Explore Map &rarr;</span>
+            </a>
         </div>
     </div>
 </section>

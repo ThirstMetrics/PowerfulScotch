@@ -158,6 +158,47 @@ function ps_register_acf_fields() {
                 'type'         => 'text',
                 'instructions' => 'e.g., Large-scale, Artisanal',
             ],
+            [
+                'key'          => 'field_name_japanese',
+                'label'        => 'Japanese Name',
+                'name'         => 'name_japanese',
+                'type'         => 'text',
+                'instructions' => 'Name in Japanese characters (sake)',
+            ],
+            [
+                'key'          => 'field_prefecture',
+                'label'        => 'Prefecture',
+                'name'         => 'prefecture',
+                'type'         => 'text',
+                'instructions' => 'Japanese prefecture (sake)',
+            ],
+            [
+                'key'          => 'field_key_brands',
+                'label'        => 'Key Brands',
+                'name'         => 'key_brands',
+                'type'         => 'text',
+            ],
+            [
+                'key'          => 'field_rice_varieties',
+                'label'        => 'Rice Varieties',
+                'name'         => 'rice_varieties',
+                'type'         => 'text',
+                'instructions' => 'e.g., Yamadanishiki, Gohyakumangoku',
+            ],
+            [
+                'key'          => 'field_toji_school',
+                'label'        => 'Toji School',
+                'name'         => 'toji_school',
+                'type'         => 'text',
+                'instructions' => 'e.g., Nanbu Toji, Echigo Toji',
+            ],
+            [
+                'key'          => 'field_production_size',
+                'label'        => 'Production Size',
+                'name'         => 'production_size',
+                'type'         => 'text',
+                'instructions' => 'e.g., Small, Medium, Large',
+            ],
         ],
         'location' => [
             [
@@ -217,6 +258,12 @@ function ps_render_distillery_meta_box($post) {
         'nom_number'         => ['label' => 'NOM Number', 'type' => 'text'],
         'cooking_method'     => ['label' => 'Cooking Method', 'type' => 'text'],
         'production_capacity'=> ['label' => 'Production Capacity', 'type' => 'text'],
+        'name_japanese'      => ['label' => 'Japanese Name', 'type' => 'text'],
+        'prefecture'         => ['label' => 'Prefecture', 'type' => 'text'],
+        'key_brands'         => ['label' => 'Key Brands', 'type' => 'text'],
+        'rice_varieties'     => ['label' => 'Rice Varieties', 'type' => 'text'],
+        'toji_school'        => ['label' => 'Toji School', 'type' => 'text'],
+        'production_size'    => ['label' => 'Production Size', 'type' => 'text'],
     ];
 
     echo '<table class="form-table"><tbody>';
@@ -260,6 +307,8 @@ function ps_save_distillery_meta($post_id) {
         'water_source', 'still_count', 'still_types', 'expressions',
         'barrel_sources', 'raw_material', 'country',
         'nom_number', 'cooking_method', 'production_capacity',
+        'name_japanese', 'prefecture', 'key_brands',
+        'rice_varieties', 'toji_school', 'production_size',
     ];
 
     foreach ($fields as $field) {
