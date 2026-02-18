@@ -137,6 +137,27 @@ function ps_register_acf_fields() {
                 'name'         => 'country',
                 'type'         => 'text',
             ],
+            [
+                'key'          => 'field_nom_number',
+                'label'        => 'NOM Number',
+                'name'         => 'nom_number',
+                'type'         => 'text',
+                'instructions' => 'NOM registration number (tequila)',
+            ],
+            [
+                'key'          => 'field_cooking_method',
+                'label'        => 'Cooking Method',
+                'name'         => 'cooking_method',
+                'type'         => 'text',
+                'instructions' => 'e.g., Brick oven, Autoclave, Diffuser',
+            ],
+            [
+                'key'          => 'field_production_capacity',
+                'label'        => 'Production Capacity',
+                'name'         => 'production_capacity',
+                'type'         => 'text',
+                'instructions' => 'e.g., Large-scale, Artisanal',
+            ],
         ],
         'location' => [
             [
@@ -193,6 +214,9 @@ function ps_render_distillery_meta_box($post) {
         'barrel_sources'     => ['label' => 'Barrel Sources', 'type' => 'text'],
         'raw_material'       => ['label' => 'Raw Material', 'type' => 'text'],
         'country'            => ['label' => 'Country', 'type' => 'text'],
+        'nom_number'         => ['label' => 'NOM Number', 'type' => 'text'],
+        'cooking_method'     => ['label' => 'Cooking Method', 'type' => 'text'],
+        'production_capacity'=> ['label' => 'Production Capacity', 'type' => 'text'],
     ];
 
     echo '<table class="form-table"><tbody>';
@@ -235,6 +259,7 @@ function ps_save_distillery_meta($post_id) {
         'year_founded', 'year_closed', 'official_website', 'owner',
         'water_source', 'still_count', 'still_types', 'expressions',
         'barrel_sources', 'raw_material', 'country',
+        'nom_number', 'cooking_method', 'production_capacity',
     ];
 
     foreach ($fields as $field) {

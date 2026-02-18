@@ -110,6 +110,9 @@ function ps_get_distilleries_geojson(WP_REST_Request $request) {
             $barrel_sources = get_post_meta($post_id, 'barrel_sources', true);
             $raw_material   = get_post_meta($post_id, 'raw_material', true);
             $country        = get_post_meta($post_id, 'country', true);
+            $nom_number          = get_post_meta($post_id, 'nom_number', true);
+            $cooking_method      = get_post_meta($post_id, 'cooking_method', true);
+            $production_capacity = get_post_meta($post_id, 'production_capacity', true);
 
             $year_display = $year;
             if ($year_closed) {
@@ -141,6 +144,9 @@ function ps_get_distilleries_geojson(WP_REST_Request $request) {
                     'barrel_sources'   => $barrel_sources,
                     'raw_material'     => $raw_material,
                     'country'          => $country,
+                    'nom_number'          => $nom_number,
+                    'cooking_method'      => $cooking_method,
+                    'production_capacity' => $production_capacity,
                 ],
             ];
         }

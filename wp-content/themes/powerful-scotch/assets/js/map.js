@@ -15,7 +15,7 @@
         sake:    { center: [36.2, 138.2],   zoom: 6  },
     };
 
-    var AVAILABLE_SPIRITS = ['scotch', 'rum']; // Spirits with actual data
+    var AVAILABLE_SPIRITS = ['scotch', 'rum', 'tequila']; // Spirits with actual data
 
     // State
     var map, clusterGroup, miniMap, allFeatures = [], filteredFeatures = [];
@@ -213,6 +213,7 @@
             var spiritLabel = getSpiritLabel(p);
 
             var tooltipHtml = '<div class="popup-name">' + escHtml(p.name) + '</div>' +
+                (p.nom_number ? '<div class="popup-nom">NOM ' + escHtml(p.nom_number) + '</div>' : '') +
                 '<div class="popup-meta">' +
                     '<span class="status-badge status-badge--' + escHtml(p.status.toLowerCase()) + ' status-badge--sm">' + escHtml(p.status) + '</span>' +
                     (locationStr ? '<span class="meta-tag meta-tag--sm">' + locationStr + '</span>' : '') +
@@ -283,15 +284,18 @@
         html += '</div>';
 
         html += '<div class="sidebar-facts">';
+        if (p.nom_number) html += buildFact('NOM', p.nom_number);
         if (p.country) html += buildFact('Country', p.country);
         if (p.year) html += buildFact('Years Active', p.year);
         if (p.region) html += buildFact('Region', p.region);
         if (p.type) html += buildFact('Type', p.type);
         html += buildFact('Status', p.status);
         if (p.owner) html += buildFact('Owner', p.owner);
+        if (p.cooking_method) html += buildFact('Cooking Method', p.cooking_method);
         if (p.raw_material) html += buildFact('Raw Material', p.raw_material);
         if (p.still_types) html += buildFact('Still Types', p.still_types);
         if (p.barrel_sources) html += buildFact('Barrel Sources', p.barrel_sources);
+        if (p.production_capacity) html += buildFact('Production Capacity', p.production_capacity);
         if (p.expressions) html += buildFact('Expressions', p.expressions);
         if (p.official_website) {
             var displayUrl = p.official_website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');

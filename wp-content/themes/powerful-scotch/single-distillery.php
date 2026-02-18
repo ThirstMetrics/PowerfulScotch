@@ -24,6 +24,9 @@ if (have_posts()) : the_post();
     $barrel_sources = get_post_meta($post_id, 'barrel_sources', true);
     $raw_material   = get_post_meta($post_id, 'raw_material', true);
     $country        = get_post_meta($post_id, 'country', true);
+    $nom_number          = get_post_meta($post_id, 'nom_number', true);
+    $cooking_method      = get_post_meta($post_id, 'cooking_method', true);
+    $production_capacity = get_post_meta($post_id, 'production_capacity', true);
 
     $regions      = wp_get_post_terms($post_id, 'region', ['fields' => 'names']);
     $region_name  = !empty($regions) ? $regions[0] : '';
@@ -97,6 +100,12 @@ if (have_posts()) : the_post();
                     <td><?php echo esc_html($country); ?></td>
                 </tr>
                 <?php endif; ?>
+                <?php if ($nom_number) : ?>
+                <tr>
+                    <th>NOM Number</th>
+                    <td><?php echo esc_html($nom_number); ?></td>
+                </tr>
+                <?php endif; ?>
                 <?php if ($type) : ?>
                 <tr>
                     <th>Type</th>
@@ -131,10 +140,22 @@ if (have_posts()) : the_post();
                     <td><?php echo esc_html($still_types); ?></td>
                 </tr>
                 <?php endif; ?>
+                <?php if ($cooking_method) : ?>
+                <tr>
+                    <th>Cooking Method</th>
+                    <td><?php echo esc_html($cooking_method); ?></td>
+                </tr>
+                <?php endif; ?>
                 <?php if ($raw_material) : ?>
                 <tr>
                     <th>Raw Material</th>
                     <td><?php echo esc_html($raw_material); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($production_capacity) : ?>
+                <tr>
+                    <th>Production Capacity</th>
+                    <td><?php echo esc_html($production_capacity); ?></td>
                 </tr>
                 <?php endif; ?>
                 <?php if ($barrel_sources) : ?>

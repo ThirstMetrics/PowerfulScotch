@@ -87,5 +87,16 @@ function ps_create_default_terms() {
             wp_insert_term($region, 'region');
         }
     }
+
+    // Tequila regions
+    $tequila_regions = [
+        'Los Altos (Highlands)', 'Tequila Valley (Lowlands)',
+        'Central Jalisco', 'Guanajuato', 'Tamaulipas',
+    ];
+    foreach ($tequila_regions as $region) {
+        if (!term_exists($region, 'region')) {
+            wp_insert_term($region, 'region');
+        }
+    }
 }
 add_action('after_switch_theme', 'ps_create_default_terms');
