@@ -1,6 +1,6 @@
 # PowerfulSpirits — Project Handoff
 
-## Current State (Feb 16, 2026)
+## Current State (Feb 17, 2026)
 
 **LIVE** at: https://wordpress-1449472-6215096.cloudwaysapps.com/
 **Target domain**: PowerfulSpirits.PowerfulThirst.com (DNS not yet configured)
@@ -8,15 +8,15 @@
 ### What's Live
 - **Scotch map**: `/map/?spirit=scotch` — 135 distilleries across Scotland
 - **Rum map**: `/map/?spirit=rum` — 173 distilleries across 54 countries, 7 geographic regions
-- **Tequila**: Coming Soon overlay (tab exists, no data)
-- **Sake**: Coming Soon overlay (tab exists, no data) — **NEXT SESSION TARGET**
-- **Detail pages**: `/distillery/{slug}/` — full profiles with map, facts table, production process
+- **Tequila map**: `/map/?spirit=tequila` — 135 distilleries across 5 Mexican regions
+- **Sake map**: `/map/?spirit=sake` — 798 breweries across Japan
+- **Detail pages**: `/distillery/{slug}/` — full profiles with map, facts table, production details
 - **Archive**: `/distillery/` — browsable grid of all distilleries
-- **REST API**: `/wp-json/powerful-spirits/v1/distilleries?spirit_type=scotch|rum` — GeoJSON endpoint
-- **Homepage**: Hero + spirit cards (scotch active, rum active with 173 count, tequila/sake Coming Soon)
+- **REST API**: `/wp-json/powerful-spirits/v1/distilleries?spirit_type=scotch|rum|tequila|sake` — GeoJSON endpoint
+- **Homepage**: Hero + spirit cards — all 4 spirits active with dynamic counts (1,241 total distilleries)
 
 ### Brand
-- Theme branded as **PowerfulSpirits** (v1.1.0)
+- Theme branded as **PowerfulSpirits** (v1.3.0)
 - PowerfulThirst Atlas logo in header/footer
 - Custom favicon: Atlas graphic only (text stripped), served as .ico + 32px + 192px PNG
 - Dark theme: `#0f0f1a` bg, `#d4a574` gold accent, `#1b3a4b` teal (brand guide in main.css header)
@@ -41,19 +41,19 @@
 
 ---
 
-## Theme: powerful-scotch/ (branded PowerfulSpirits v1.1.0)
+## Theme: powerful-scotch/ (branded PowerfulSpirits v1.3.0)
 
 ### File Structure
 ```
 wp-content/themes/powerful-scotch/
-├── style.css                    # Theme declaration (Powerful Spirits v1.1.0)
+├── style.css                    # Theme declaration (Powerful Spirits v1.3.0)
 ├── functions.php                # Setup, enqueues, REST URL, cache invalidation
 ├── header.php                   # Fixed header: logo + spirit nav + favicon links
 ├── footer.php                   # Footer with logo + spirit links
 ├── index.php                    # Fallback template
-├── front-page.php               # Homepage: hero + spirit cards (scotch/rum active) + map preview
+├── front-page.php               # Homepage: hero + spirit cards (all 4 active) + map preview
 ├── page-map.php                 # Full-screen interactive map with toolbar, sidebar, bottomsheet
-├── single-distillery.php        # Detail page: map + facts table + rum/scotch fields
+├── single-distillery.php        # Detail page: map + facts table + spirit-specific fields
 ├── archive-distillery.php       # Distillery grid listing
 ├── 404.php                      # Error page
 ├── assets/
@@ -69,11 +69,13 @@ wp-content/themes/powerful-scotch/
 │       └── favicon-192.png      # 192px PNG (Android/Apple touch)
 ├── inc/
 │   ├── cpt-distillery.php       # Custom post type: distillery
-│   ├── taxonomies.php           # spirit_type + region taxonomies (scotch regions + 7 rum regions)
+│   ├── taxonomies.php           # spirit_type + region taxonomies (scotch/rum/tequila regions)
 │   ├── rest-api.php             # GeoJSON REST endpoint (powerful-spirits/v1) with transient caching
 │   ├── acf-fields.php           # ACF field groups + native meta box fallback (all fields)
 │   ├── import.php               # Scotch import: 135 distilleries (already run)
-│   └── import-rum.php           # Rum import: 173 distilleries (already run)
+│   ├── import-rum.php           # Rum import: 173 distilleries (already run)
+│   ├── import-tequila.php       # Tequila import: 135 distilleries (already run)
+│   └── tequila-data.php         # Tequila distillery data array (auto-generated from Excel)
 └── template-parts/
     ├── distillery-card.php      # Reusable card component
     └── map-filters.php          # Region filter chips
@@ -81,12 +83,17 @@ wp-content/themes/powerful-scotch/
 
 ### Key Technical Patterns
 
+- **All 4 spirits are fully live.** No more Coming Soon overlays.
+
 - **Adding a new spirit** requires changes to:
   1. `assets/js/map.js` — add to `AVAILABLE_SPIRITS` array, set default view in `SPIRIT_VIEWS`
   2. `inc/taxonomies.php` — add region terms in `ps_create_default_terms()`
   3. `inc/import-{spirit}.php` — new import script (follow `import-rum.php` pattern)
-  4. `front-page.php` — convert Coming Soon `<div>` to active `<a>` with dynamic count
-  5. `functions.php` — add transient key to `ps_invalidate_cache()` (already has sake)
+  4. `front-page.php` — add active `<a>` card with dynamic count query
+  5. `inc/acf-fields.php` — add spirit-specific fields to ACF group, meta box, and save handler
+  6. `inc/rest-api.php` — expose spirit-specific fields in GeoJSON properties
+  7. `single-distillery.php` — add conditional rows for spirit-specific fields
+  8. `functions.php` — bump `PS_VERSION` for cache busting, add transient key to `ps_invalidate_cache()`
 
 - **map.js popup behavior**: Hover opens a popup (not tooltip) with `interactive: true` so users can click the Visit link. Click opens the sidebar. `getSpiritLabel()` returns "Rum" or "Rhum" based on French-tradition countries.
 
@@ -95,6 +102,10 @@ wp-content/themes/powerful-scotch/
 - **Transient cache keys**: `ps_distilleries_{spirit}` and `ps_distilleries_all` — invalidated on post save, 1 hour TTL
 
 - **SCP requires `-O` flag** (legacy protocol) on this Cloudways server
+
+- **SCP path matters**: When uploading JS/CSS assets, always SCP to the correct subdirectory (e.g., `assets/js/map.js`), not the theme root. SCP to the wrong path was the cause of a search bug that took debugging to find.
+
+- **Version bumping**: Always bump `PS_VERSION` in `functions.php` after changing JS/CSS. Without this, Varnish and browser caches serve stale assets.
 
 ### Custom Fields (per distillery post)
 
@@ -109,19 +120,31 @@ wp-content/themes/powerful-scotch/
 | Official Website | `official_website` | All spirits | URL |
 | Owner | `owner` | All spirits | text |
 | Water Source | `water_source` | All spirits | text |
-| Still Count | `still_count` | All spirits | number or text ("Multiple") |
-| Still Types | `still_types` | Rum | text (e.g., "Column stills", "Pot and column stills") |
-| Expressions | `expressions` | Rum | textarea (notable brands/expressions) |
-| Barrel Sources | `barrel_sources` | Rum | text (e.g., "Oak", "Ex-bourbon") |
-| Raw Material | `raw_material` | Rum | text (e.g., "Molasses", "Cane juice") |
-| Country | `country` | Rum | text (country name) |
+| Still Count | `still_count` | Scotch, Rum, Tequila | number or text ("Multiple") |
+| Still Types | `still_types` | Rum, Tequila | text (e.g., "Column stills", "Copper pot stills") |
+| Expressions | `expressions` | Rum, Sake | textarea (notable brands/expressions) |
+| Barrel Sources | `barrel_sources` | Rum, Tequila | text (e.g., "Oak", "Ex-bourbon") |
+| Raw Material | `raw_material` | Rum, Tequila | text (e.g., "Molasses", "Highland agave") |
+| Country | `country` | Rum, Tequila, Sake | text (country name) |
+| NOM Number | `nom_number` | Tequila | text (NOM registration number) |
+| Cooking Method | `cooking_method` | Tequila | text (e.g., "Brick oven", "Autoclave", "Diffuser") |
+| Production Capacity | `production_capacity` | Tequila | text (e.g., "Large-scale", "Artisanal") |
+| Japanese Name | `name_japanese` | Sake | text (kanji/kana name) |
+| Prefecture | `prefecture` | Sake | text (Japanese prefecture) |
+| Key Brands | `key_brands` | Sake | text (notable sake brands) |
+| Rice Varieties | `rice_varieties` | Sake | text (e.g., "Yamadanishiki", "Gohyakumangoku") |
+| Toji School | `toji_school` | Sake | text (e.g., "Nanbu Toji", "Echigo Toji") |
+| Production Size | `production_size` | Sake | text (Small / Medium / Large) |
 
 ACF plugin is **not installed** — native meta boxes handle all fields.
 
 ### Taxonomies
 
 - **spirit_type**: Scotch, Rum, Tequila, Sake (terms pre-created)
-- **region**: Scotch regions (Speyside, Islay, Highlands, etc.) + Rum regions (Caribbean, Central America, South America, North America, Europe, Africa, Asia-Pacific)
+- **region**:
+  - Scotch: Speyside, Islay, Highlands, North Highlands, West Highlands, Eastern Highlands, Lowlands, Campbeltown, Islands, Midlands
+  - Rum: Caribbean, Central America, South America, North America, Europe, Africa, Asia-Pacific
+  - Tequila: Los Altos (Highlands), Tequila Valley (Lowlands), Central Jalisco, Guanajuato, Tamaulipas
 
 ---
 
@@ -130,75 +153,28 @@ ACF plugin is **not installed** — native meta boxes handle all fields.
 ```bash
 # 1. Edit files locally in wp-content/themes/powerful-scotch/
 
-# 2. Upload changed files (note: -O flag required):
-scp -O <local-file> master_nrbudqgaus@167.71.242.157:/home/master/applications/ujcwjsspzd/public_html/wp-content/themes/powerful-scotch/<path>
+# 2. Bump PS_VERSION in functions.php (REQUIRED for JS/CSS changes)
 
-# 3. Run import (for new spirit data):
-ssh master_nrbudqgaus@167.71.242.157 "cd /home/master/applications/ujcwjsspzd/public_html && wp eval-file wp-content/themes/powerful-scotch/inc/import-sake.php"
+# 3. Upload changed files (note: -O flag required, use correct subdirectory paths):
+scp -O wp-content/themes/powerful-scotch/assets/js/map.js master_nrbudqgaus@167.71.242.157:/home/master/applications/ujcwjsspzd/public_html/wp-content/themes/powerful-scotch/assets/js/map.js
+scp -O wp-content/themes/powerful-scotch/inc/rest-api.php master_nrbudqgaus@167.71.242.157:/home/master/applications/ujcwjsspzd/public_html/wp-content/themes/powerful-scotch/inc/rest-api.php
 
-# 4. Purge caches (REQUIRED after every change):
+# 4. Run import (for new spirit data):
+ssh master_nrbudqgaus@167.71.242.157 "cd /home/master/applications/ujcwjsspzd/public_html && wp eval-file wp-content/themes/powerful-scotch/inc/import-{spirit}.php"
+
+# 5. Purge caches (REQUIRED after every change):
 ssh master_nrbudqgaus@167.71.242.157 "cd /home/master/applications/ujcwjsspzd/public_html && wp breeze purge --cache=all && wp cache flush"
 
-# 5. Commit + push:
+# 6. Commit + push:
 git add <files> && git commit -m "message" && git push
 ```
 
----
-
-## Next Session: Sake Map
-
-### What Needs to Happen
-
-1. **Source sake data** — Need an Excel/CSV or data source for Japanese sake breweries with:
-   - Brewery name, Prefecture/region, GPS coordinates
-   - Sake-specific fields: rice type (酒米), water source, yeast strain, brewing method (ginjo/daiginjo/junmai/etc.), toji (master brewer) school, notable brands/expressions
-   - Website
-
-2. **Decide on regions** — Japan's sake regions could be:
-   - By traditional region: Tohoku, Hokuriku, Kanto, Chubu, Kinki, Chugoku, Shikoku, Kyushu
-   - Or by prefecture: Niigata, Hyogo (Nada), Kyoto (Fushimi), Akita, Yamagata, etc.
-
-3. **Create `inc/import-sake.php`** — follow `import-rum.php` pattern:
-   - Parse data, GPS conversion if needed
-   - Map to region terms
-   - Set `spirit_type` = "Sake"
-   - Set sake-specific meta fields
-
-4. **Add sake-specific ACF fields** to `inc/acf-fields.php`:
-   - Potential fields: `rice_type`, `yeast_strain`, `brewing_method`, `toji_school`, `prefecture`
-   - Add to native meta box fallback save array
-
-5. **Add sake regions** to `inc/taxonomies.php`
-
-6. **Update `assets/js/map.js`**:
-   - Add `'sake'` to `AVAILABLE_SPIRITS` array
-   - Verify `SPIRIT_VIEWS.sake` center/zoom (currently `{ center: [36.2, 138.2], zoom: 6 }`)
-   - Add sake-specific fields to `buildDetailPanel()` and hover popup
-   - Consider: sake breweries don't have "Rum/Rhum" distinction — `getSpiritLabel()` already handles non-rum spirits
-
-7. **Update `single-distillery.php`** — add conditional rows for sake fields
-
-8. **Update `front-page.php`** — convert sake card from Coming Soon `<div>` to active `<a>` with count
-
-9. **Update REST API** (`inc/rest-api.php`) — add sake meta fields to GeoJSON properties
-
-10. **Deploy + import + cache flush**
-
-### Files That Will Change
-- `inc/acf-fields.php` — new sake fields
-- `inc/taxonomies.php` — sake region terms
-- `inc/rest-api.php` — sake fields in GeoJSON
-- `inc/import-sake.php` — **new file**
-- `assets/js/map.js` — AVAILABLE_SPIRITS, detail panel, popup
-- `single-distillery.php` — sake field rows
-- `front-page.php` — activate sake card
-
-### Data Needed Before Starting
-- **A sake brewery dataset** (equivalent to the "Rum Distilleries.xlsx" used for rum)
-- If no Excel is available, data can be compiled from resources like:
-  - Japan Sake and Shochu Makers Association brewery registry
-  - Sake breweries by prefecture databases
-  - Major brewery websites (Dassai/Asahi Shuzo, Kubota/Asahi-Shuzo Niigata, Hakkaisan, Juyondai, etc.)
+**Important**: SSH command output is not visible in Claude Code's terminal. To capture output, redirect to a remote file and SCP it back:
+```bash
+ssh user@host 'command > /tmp/output.log 2>&1'
+scp -O user@host:/tmp/output.log ./output.log
+cat output.log
+```
 
 ---
 
@@ -206,19 +182,23 @@ git add <files> && git commit -m "message" && git push
 
 1. **3 rum distilleries with zero coordinates**: Ron Millonario (Peru), Zhumir (Ecuador), Three Counties Spirits Co. (UK) — GPS was unparseable from Excel. They're imported but won't show on the map. Can be manually fixed in WP admin.
 
-2. **Varnish cache**: Cloudways serves through Varnish. Always run `wp breeze purge --cache=all` after template/CSS/JS changes.
+2. **Varnish cache**: Cloudways serves through Varnish. Always run `wp breeze purge --cache=all` after template/CSS/JS changes. Always bump `PS_VERSION` for JS/CSS changes.
 
 3. **Browser favicon cache**: After favicon changes, users may need hard-refresh (Ctrl+Shift+R) to see updates.
 
 4. **Theme directory name**: Stays `powerful-scotch/` on disk to avoid breaking the active theme registration on the server. All branding in files says "PowerfulSpirits".
 
+5. **Search dropdown z-index**: Fixed in v1.3.0. The `.map-toolbar` now has `position: relative; z-index: 500` to ensure search results appear above the Leaflet map container.
+
+6. **Tequila data source**: `Tequila Distilleries.xlsx` in project root, processed by `gen_tequila_php.py` into `inc/tequila-data.php`. Region classification is based on city names in the address field.
+
 ---
 
 ## Data Sources
 
-| Spirit | Source | Count | Import Script |
-|--------|--------|-------|---------------|
-| Scotch | Malt Madness (Wayback Machine) + GPS mapping | 135 | `inc/import.php` (run) |
-| Rum | `Rum Distilleries.xlsx` (54 countries) | 173 | `inc/import-rum.php` (run) |
-| Tequila | Not yet sourced | — | — |
-| Sake | Not yet sourced | — | — |
+| Spirit | Source | Count | Import Script | Regions |
+|--------|--------|-------|---------------|---------|
+| Scotch | Malt Madness (Wayback Machine) + GPS mapping | 135 | `inc/import.php` (run) | 10 Scottish regions |
+| Rum | `Rum Distilleries.xlsx` (54 countries) | 173 | `inc/import-rum.php` (run) | 7 geographic regions |
+| Tequila | `Tequila Distilleries.xlsx` + agavematchmaker.com | 135 | `inc/import-tequila.php` (run) | 5 Mexican regions |
+| Sake | Sake brewery dataset | 798 | (previously run) | By prefecture |
